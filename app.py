@@ -1,7 +1,7 @@
 from flask import Flask, json, request
 import requests
 import os
-from .fortnite import Fortnite
+from fortnite import Fortnite
 import time
 
 
