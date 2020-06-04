@@ -70,7 +70,7 @@ def callSendAPI(sender_psid, response):
     payload = {
         "qs": {
                 "access_token": os.getenv("page_token"),
-              }
+              },
         "method": "post",
         "json": request_body
     }
