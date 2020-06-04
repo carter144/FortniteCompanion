@@ -1,7 +1,7 @@
 from flask import Flask, json, request
 import requests
 import os
-from .fortnite import Fortnite
+from fortnite import Fortnite
 import time
 
 
@@ -72,6 +72,9 @@ def callSendAPI(sender_psid, response):
     requests.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + os.getenv("page_token"), json=request_body)
 def getItemShop(sender_psid):
     image_urls = fort.getShopData()
+    print("non set: ", image_urls)
+    image_urls = set(image_urls)
+    print("Set: ", image_urls)
     for url in image_urls:
 
         request_body = {
@@ -81,14 +84,14 @@ def getItemShop(sender_psid):
                     "type": "image",
                     "payload": {
                         "url": url,
-                        "is_reusable": "true"
+                        "is_reusable": "false"
                     }
                 }
             }
         }
         print(request_body)
         requests.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + os.getenv("page_token"), json=request_body)
-        time.sleep(2)
+        time.sleep(10)
 
 
 
