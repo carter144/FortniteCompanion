@@ -72,25 +72,35 @@ def callSendAPI(sender_psid, response):
     requests.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + os.getenv("page_token"), json=request_body)
 def getItemShop(sender_psid):
     image_urls = fort.getShopData()
+    request_body = {"batch": []}
+
     
-    image_urls = set(image_urls)
     
     for url in image_urls:
 
-        request_body = {
-            "recipient": {"id": sender_psid},
-            "message": {
-                "attachment": {
-                    "type": "image",
-                    "payload": {
-                        "url": url,
-                        "is_reusable": "false"
-                    }
+
+        message_details = {
+            "attachment": {
+                "type": "image",
+                "payload": {
+                    
+                        "is_reusable": "true",
+                        "url": url 
                 }
             }
         }
+
+
+        json_obj = {
+            "method": "POST",
+            "relative_url":"me/messages",
+            "body": "recipient={\"id\":\"" + sender_psid + "\"}&message=" + json.dumps(message_details)
+        }
+
+        request_body["batch"].append(json_obj)
         
-        requests.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + os.getenv("page_token"), json=request_body)
+        
+    requests.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + os.getenv("page_token"), json=request_body)
         
 
 
