@@ -67,7 +67,10 @@ def callSendAPI(sender_psid, response):
         "recipient": {"id": sender_psid},
         "message": response
     }
-
+    print("page_token", os.getenv("page_token"))
+    print("request_body", request_body)
+    print("json_body", json.dumps(request_body))
+    print("URL", "https://graph.facebook.com/v2.6/me/messages?access_token=" + os.getenv("page_token"))
 
     requests.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + os.getenv("page_token"), data=json.dumps(request_body))
 
