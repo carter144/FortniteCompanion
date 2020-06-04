@@ -1,6 +1,7 @@
 from flask import Flask, json, request
+import requests
+import os
 
-companies = [{"id": 1, "name": "Company One"}, {"id": 2, "name": "Company Two"}]
 
 app = Flask(__name__)
 
@@ -31,17 +32,57 @@ def post_webhook():
     data = request.get_json()
     json_object = data["object"]
     if json_object == "page":
-    	entries = data["entry"]
-    	for entry in entries:
-    		webhook_event = entry["messaging"][0]
-    		print(webhook_event)
-    	return "EVENT_RECEIVED"
+        entries = data["entry"]
+        for entry in entries:
+            webhook_event = entry["messaging"][0]
+            sender_psid = webhook_event["sender"]["id"]
+
+            if webhook_event["message"]:
+                handleMessage(sender_psid, webhook_event["message"])
+            elif webhook_event["postback"]:
+                handlePostback(sender_psid, webhook_event["postback"])
+        return "EVENT_RECEIVED"
 
     else:
-    	return json.dumps({'success':False}), 403, {'ContentType':'application/json'}
+        return json.dumps({'success':False}), 403, {'ContentType':'application/json'}
 
     return json.dumps(data)
   
+
+def handleMessage(sender_psid, received_message):
+    response = ""
+    if received_message.text:
+        response = {"text": "penis"}
+    callSendAPI(sender_psid, response)
+    pass
+
+
+
+def handlePostback(sender_psid, received_postback):
+    pass
+
+def callSendAPI(sender_psid, response):
+    request_body = {
+        "recipient": {
+            "id": sender_psid
+        },
+        "message:" response
+    }
+
+    payload = {
+        "qs": {
+                "access_token": os.getenv("page_token"),
+              }
+        "method": "post",
+        "json": request_body
+    }
+
+    requests.post("https://graph.facebook.com/v2.6/me/messages", data=payload)
+
+
+
+
+
 
 if __name__ == '__main__':
     app.run()
