@@ -62,11 +62,10 @@ def handlePostback(sender_psid, received_postback):
     pass
 
 def callSendAPI(sender_psid, response):
-    request_body = {
-        "recipient": {
-            "id": sender_psid
-        },
-        "message:" response
+    request_body = 
+    {
+        "recipient": {"id": sender_psid},
+        "message": response
     }
 
     payload = {
