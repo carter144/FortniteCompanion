@@ -22,7 +22,7 @@ def get_webhook():
 
     if mode and token:
         if mode == "subscribe" and token == VERIFY_TOKEN:
-            return json.dumps({'success':True}), 200, {'ContentType':'application/json'} 
+            return challenge
         else:
             return json.dumps({'success':False}), 403, {'ContentType':'application/json'} 
 
@@ -35,7 +35,7 @@ def post_webhook():
     	for entry in entries:
     		webhook_event = entry["messaging"][0]
     		print(webhook_event)
-    	return json.dumps({'success':True}), 200, {'ContentType':'application/json'} 
+    	return "EVENT_RECEIVED"
 
     else:
     	return json.dumps({'success':False}), 403, {'ContentType':'application/json'}
