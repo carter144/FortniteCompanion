@@ -51,8 +51,9 @@ def post_webhook():
 
 def handleMessage(sender_psid, received_message):
     response = ""
-    if received_message.text:
-        response = {"text": "penis"}
+    print(received_message)
+    if received_message["text"]:
+        response = {"text": "carterisawesome"}
     callSendAPI(sender_psid, response)
     pass
 
