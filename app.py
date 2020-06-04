@@ -1,9 +1,12 @@
 from flask import Flask, json, request
 import requests
 import os
+from .fortnite import Fortnite
+import time
 
 
 app = Flask(__name__)
+fort = Fortnite("0a4b0694-1c21b6f7-b786539b-81c2aa52")
 
 @app.route('/webhook', methods=['GET'])
 def get_webhook():
@@ -50,11 +53,8 @@ def post_webhook():
   
 
 def handleMessage(sender_psid, received_message):
-    response = ""
-
-    if received_message["text"]:
-        response = {"text": "carterisawesome"}
-    callSendAPI(sender_psid, response)
+    getItemShop(sender_psid)
+    
     pass
 
 
@@ -70,7 +70,46 @@ def callSendAPI(sender_psid, response):
 
 
     requests.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + os.getenv("page_token"), json=request_body)
+def getItemShop(sender_psid):
+    image_urls = fort.getShopData()
+    for url in image_urls:
 
+        request_body = {
+            "recipient": {"id": sender_psid},
+            "message": {
+                "attachment": {
+                    "type": "image",
+                    "payload": {
+                        "url": url,
+                        "is_reusable": "true"
+                    }
+                }
+            }
+        }
+        print(request_body)
+        requests.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + os.getenv("page_token"), json=request_body)
+        time.sleep(2)
+
+
+
+def uploadFortniteImages(images):
+    attachment_ids = []
+    for image_url in images:
+        json_data = {
+            "message": {
+                "attachment": {
+                    "type": "image",
+                    "payload": {
+                        "is_reusable": True,
+                        "url": image_url
+                    }
+                }
+            }
+        }
+        r = requests.post("https://graph.facebook.com/v7.0/me/message_attachments?access_token=" + os.getenv("page_token"), json=json_data)
+        json_results = json.loads(r.text)
+        attachment_ids.append(json_results["attachment_id"])
+    return attachment_ids
 
 
 
