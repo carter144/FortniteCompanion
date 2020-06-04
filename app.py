@@ -36,7 +36,7 @@ def post_webhook():
         for entry in entries:
             webhook_event = entry["messaging"][0]
             sender_psid = webhook_event["sender"]["id"]
-
+            print(sender_psid)
             if webhook_event["message"]:
                 handleMessage(sender_psid, webhook_event["message"])
             elif webhook_event["postback"]:
@@ -75,7 +75,7 @@ def callSendAPI(sender_psid, response):
         "method": "post",
         "json": request_body
     }
-
+    print("payload", payload)
     requests.post("https://graph.facebook.com/v2.6/me/messages", data=payload)
 
 
