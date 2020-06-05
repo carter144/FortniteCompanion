@@ -28,6 +28,15 @@ class Fortnite:
 
 
     def getPlayerStats(self, name):
-        pass
+        account_json_data = requests.get(f'https://fortniteapi.io/lookup?username={name}', headers={"Authorization": self.api_key})
+        account_id = account_json_data["account_id"]
+        stats_json_data = requests.get(f'https://fortniteapi.io/stats?account={account_id}', headers={"Authorization": self.api_key})
+        
+        stats = dict()
+        stats["name"] = stats_json_data["name"]
+        stats["level"] = stats_json_data["account"]["level"]
+        return stats
+
+
 
 

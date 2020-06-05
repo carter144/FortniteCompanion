@@ -59,6 +59,13 @@ def handleMessage(sender_psid, received_message):
         if payload == "item_shop":
             getItemShop(sender_psid)
         elif payload == "stats":
+            request_body = {
+              "recipient": {"id": sender_psid},
+              "messaging_type": "RESPONSE",
+              "message": {
+                  "text": "Stats for which account name?",
+              }
+            }
             print("Called stats")
     else:
         request_body = {
@@ -131,7 +138,18 @@ def getItemShop(sender_psid):
         
     requests.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + os.getenv("page_token"), json=request_body)
         
+def postPlayerStats(sender_psid):
+    stats = fort.getPlayerStats()
+    request_body = {
+      "recipient": {
+        "id": sender_psid
+      },
+      "message": {
+        "text": '\n'.join(['%s: %s' % (key, value) for (key, value) in stats.items()])
+      }
+    }
 
+    requests.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + os.getenv("page_token"), json=request_body)
 
 
 
