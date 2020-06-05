@@ -56,9 +56,9 @@ def handleMessage(sender_psid, received_message):
     #getItemShop(sender_psid)
     if "quick_reply" in received_message:
         payload = received_message["quick_reply"]["payload"]
-        if payload == "Item Shop":
+        if payload == "item_shop":
             getItemShop()
-        elif payload == "Stats":
+        elif payload == "stats":
             print("Called stats")
     else:
         request_body = {
