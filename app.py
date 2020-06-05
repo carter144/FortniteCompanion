@@ -60,29 +60,30 @@ def handleMessage(sender_psid, received_message):
             getItemShop()
         elif payload == "Stats":
             print("Called stats")
-    request_body = {
-        "recipient": {"id": sender_psid},
-        "messaging_type": "RESPONSE",
-        "message": {
-            "text": "Choose an option:",
-            "quick_replies":[
-                {
-                    "content_type":"text",
-                    "title":"Item Shop",
-                    "payload":"item_shop",
-                    
-                },
-                {
-                    "content_type":"text",
-                    "title":"Stats",
-                    "payload":"stats",
-                    
-                }
-            ]
+    else:
+        request_body = {
+            "recipient": {"id": sender_psid},
+            "messaging_type": "RESPONSE",
+            "message": {
+                "text": "Choose an option:",
+                "quick_replies":[
+                    {
+                        "content_type":"text",
+                        "title":"Item Shop",
+                        "payload":"item_shop",
+                        
+                    },
+                    {
+                        "content_type":"text",
+                        "title":"Stats",
+                        "payload":"stats",
+                        
+                    }
+                ]
+            }
         }
-    }
-    requests.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + os.getenv("page_token"), json=request_body)
-    pass
+        requests.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + os.getenv("page_token"), json=request_body)
+    
 
 
 
@@ -131,25 +132,6 @@ def getItemShop(sender_psid):
     requests.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + os.getenv("page_token"), json=request_body)
         
 
-
-def uploadFortniteImages(images):
-    attachment_ids = []
-    for image_url in images:
-        json_data = {
-            "message": {
-                "attachment": {
-                    "type": "image",
-                    "payload": {
-                        "is_reusable": True,
-                        "url": image_url
-                    }
-                }
-            }
-        }
-        r = requests.post("https://graph.facebook.com/v7.0/me/message_attachments?access_token=" + os.getenv("page_token"), json=json_data)
-        json_results = json.loads(r.text)
-        attachment_ids.append(json_results["attachment_id"])
-    return attachment_ids
 
 
 
