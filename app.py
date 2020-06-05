@@ -53,13 +53,36 @@ def post_webhook():
   
 
 def handleMessage(sender_psid, received_message):
-    getItemShop(sender_psid)
+    #getItemShop(sender_psid)
     
+    request_body = {
+        "recipient": {"id": sender_psid},
+        "messaging_type": "RESPONSE",
+        "message": {
+            "text": "Choose an option:",
+            "quick_replies":[
+                {
+                    "content_type":"text",
+                    "title":"Item Shop",
+                    "payload":"item_shop",
+                    
+                },
+                {
+                    "content_type":"text",
+                    "title":"Stats",
+                    "payload":"stats",
+                    
+                }
+            ]
+        }
+    }
+    requests.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + os.getenv("page_token"), json=request_body)
     pass
 
 
 
 def handlePostback(sender_psid, received_postback):
+    print(received_postback)
     pass
 
 def callSendAPI(sender_psid, response):
