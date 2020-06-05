@@ -7,6 +7,7 @@ import time
 
 app = Flask(__name__)
 fort = Fortnite("0a4b0694-1c21b6f7-b786539b-81c2aa52")
+conversations = ContinuedConversations()
 
 @app.route('/webhook', methods=['GET'])
 def get_webhook():
@@ -66,7 +67,8 @@ def handleMessage(sender_psid, received_message):
                   "text": "Stats for which account name?",
               }
             }
-            print("Called stats")
+            conversations.addId(sender_psid)
+            requests.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + os.getenv("page_token"), json=request_body)
     else:
         request_body = {
             "recipient": {"id": sender_psid},
