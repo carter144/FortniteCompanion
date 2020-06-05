@@ -54,7 +54,12 @@ def post_webhook():
 
 def handleMessage(sender_psid, received_message):
     #getItemShop(sender_psid)
-    
+    if received_message["quick_reply"]:
+        payload = received_message["quick_reply"]["payload"]
+        if payload == "Item Shop":
+            getItemShop()
+        elif payload == "Stats":
+            print("Called stats")
     request_body = {
         "recipient": {"id": sender_psid},
         "messaging_type": "RESPONSE",
