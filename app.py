@@ -4,7 +4,7 @@ import os
 from fortnite import Fortnite
 from ContinuedConversations import ContinuedConversations
 import time
-
+from QuickReplies import QuickReplies
 
 app = Flask(__name__)
 fort = Fortnite("0a4b0694-1c21b6f7-b786539b-81c2aa52")
@@ -56,8 +56,16 @@ def post_webhook():
 
 def handleMessage(sender_psid, received_message):
     #getItemShop(sender_psid)
-    print(received_message)
-    if "quick_reply" in received_message:
+    if conversations.hasUserQuickReplied(sender_psid):
+        reply_to_what = conversations.getConversationFrom(sender_psid)
+        if reply_to_what == QuickReplies.STATS:
+            # Expect to receive a username from user
+            username = received_message["text"]
+            postPlayerStats(username)
+            conversations.removeId(sender_psid)
+        else:
+            print("How did I get to the reply part?")
+    elif "quick_reply" in received_message:
         payload = received_message["quick_reply"]["payload"]
         if payload == "item_shop":
             getItemShop(sender_psid)
@@ -145,7 +153,7 @@ def getItemShop(sender_psid):
     requests.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + os.getenv("page_token"), json=request_body)
         
 def postPlayerStats(sender_psid):
-    stats = fort.getPlayerStats()
+    stats = fort.getPlayerStats(sender_psid)
     request_body = {
       "recipient": {
         "id": sender_psid
