@@ -70,8 +70,8 @@ def handleMessage(sender_psid, received_message):
             }
             conversations.addId(sender_psid)
             requests.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + os.getenv("page_token"), json=request_body)
-    elif "text" in received_message:
-        print(received_message)
+    # elif "text" in received_message:
+    #     print(received_message)
     else:
         request_body = {
             "recipient": {"id": sender_psid},
