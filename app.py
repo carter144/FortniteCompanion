@@ -151,7 +151,7 @@ def postQuickRepliesMenu(sender_psid):
                         "content_type":"text",
                         "title":"Item Shop",
                         "payload":"item_shop",
-                        "Image_url": "https://image.flaticon.com/icons/png/512/2922/2922581.png"
+                        "image_url": "https://image.flaticon.com/icons/png/512/2922/2922581.png"
                     },
                     {
                         "content_type":"text",
