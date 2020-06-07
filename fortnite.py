@@ -32,8 +32,8 @@ class Fortnite:
         account_id = account_json_data["account_id"]
         
         r_account_id = requests.get(f'https://fortniteapi.io/stats?account={account_id}', headers={"Authorization": self.api_key})
+        
         stats_json_data = r_account_id.json()
-
         global_stats_json = stats_json_data["global_stats"]
         retrieved_stats_json = global_stats_json[type]
 
