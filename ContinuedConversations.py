@@ -1,8 +1,6 @@
 class ContinuedConversations: 
-    user_ids = dict()
-
     def __init__(self):
-        pass
+        self.user_ids = dict()
 
     def addId(self, sender_psid, conversation):
         self.user_ids[sender_psid] = conversation

@@ -67,9 +67,9 @@ def handleMessage(sender_psid, received_message):
             print("How did I get to the reply part?")
     elif "quick_reply" in received_message:
         payload = received_message["quick_reply"]["payload"]
-        if payload == "item_shop":
+        if payload == QuickReplies.SHOP:
             getItemShop(sender_psid)
-        elif payload == "stats":
+        elif payload == QuickReplies.STATS:
             request_body = {
               "recipient": {"id": sender_psid},
               "messaging_type": "RESPONSE",
@@ -79,8 +79,6 @@ def handleMessage(sender_psid, received_message):
             }
             conversations.addId(sender_psid, QuickReplies.STATS)
             requests.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + os.getenv("page_token"), json=request_body)
-    # elif "text" in received_message:
-    #     print(received_message)
     else:
         request_body = {
             "recipient": {"id": sender_psid},
