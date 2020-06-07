@@ -63,7 +63,7 @@ def handleMessage(sender_psid, received_message):
         if reply_to_what == QuickReplies.STATS.value:
             # Expect to receive a username from user
             username = received_message["text"]
-            postPlayerStats(username)
+            postPlayerStats(sender_psid, username)
             conversations.removeId(sender_psid)
         else:
             print("How did I get to the reply part?")
@@ -152,8 +152,8 @@ def getItemShop(sender_psid):
         
     requests.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + os.getenv("page_token"), json=request_body)
         
-def postPlayerStats(sender_psid):
-    stats = fort.getPlayerStats(sender_psid)
+def postPlayerStats(sender_psid, username):
+    stats = fort.getPlayerStats(username)
     request_body = {
       "recipient": {
         "id": sender_psid
