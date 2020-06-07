@@ -60,7 +60,7 @@ def handleMessage(sender_psid, received_message):
     print(conversations.hasUserQuickReplied(sender_psid))
     if conversations.hasUserQuickReplied(sender_psid):
         reply_to_what = conversations.getConversationFrom(sender_psid)
-        if reply_to_what == QuickReplies.STATS:
+        if reply_to_what == QuickReplies.STATS.value:
             # Expect to receive a username from user
             username = received_message["text"]
             postPlayerStats(username)
@@ -69,9 +69,9 @@ def handleMessage(sender_psid, received_message):
             print("How did I get to the reply part?")
     elif "quick_reply" in received_message:
         payload = received_message["quick_reply"]["payload"]
-        if payload == QuickReplies.SHOP:
+        if payload == QuickReplies.SHOP.value:
             getItemShop(sender_psid)
-        elif payload == QuickReplies.STATS:
+        elif payload == QuickReplies.STATS.value:
             request_body = {
               "recipient": {"id": sender_psid},
               "messaging_type": "RESPONSE",
