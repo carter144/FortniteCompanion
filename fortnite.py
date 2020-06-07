@@ -41,6 +41,7 @@ class Fortnite:
         stats = dict()
         stats["Name"] = stats_json_data["name"]
         stats["Level"] = stats_json_data["account"]["level"]
+        stats["Type"] = type
         stats["K/D"] = retrieved_stats_json["kd"]
         stats["Number of kills"] = retrieved_stats_json["kills"]
         stats["Times placed Top 1"] = retrieved_stats_json["placetop1"]

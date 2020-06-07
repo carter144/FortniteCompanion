@@ -75,14 +75,7 @@ def handleMessage(sender_psid, received_message):
             postQuickRepliesMenu(sender_psid)
         elif payload == QuickReplies.STATS.value:
             conversations.addUserIdAndConversation(sender_psid, QuickReplies.STATS.value)
-            request_body = {
-              "recipient": {"id": sender_psid},
-              "messaging_type": "RESPONSE",
-              "message": {
-                  "text": "Stats for which account name?",
-              }
-            }
-            requests.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + os.getenv("page_token"), json=request_body)
+            postTextMessage(sender_psid, "Stats for which account name?")
         elif payload == QuickReplies.SOLO.value:
             handleStatsRequest(sender_psid, QuickReplies.SOLO.value)
         elif payload == QuickReplies.DUO.value:
@@ -132,15 +125,7 @@ def getItemShop(sender_psid):
 def handleStatsRequest(sender_psid, type):
     username = usernames.getUsernameFrom(sender_psid)
     if username is None:
-        request_body = {
-            "recipient": {
-                "id": sender_psid
-            },
-            "message": {
-                "text": "Let's retry that!"
-            }
-        }
-        requests.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + os.getenv("page_token"), json=request_body)
+        postTextMessage(sender_psid, "Let's retry that!")
         postQuickRepliesMenu(sender_psid)
         return
     postPlayerStats(sender_psid, username, type)
@@ -149,15 +134,7 @@ def handleStatsRequest(sender_psid, type):
 
 def postPlayerStats(sender_psid, username, type):
     stats = fort.getPlayerStats(username, type)
-    request_body = {
-      "recipient": {
-        "id": sender_psid
-      },
-      "message": {
-        "text": '\n'.join(['%s: %s' % (key, value) for (key, value) in stats.items()])
-      }
-    }
-    requests.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + os.getenv("page_token"), json=request_body)
+    postTextMessage(sender_psid, '\n'.join(['%s: %s' % (key, value) for (key, value) in stats.items()]))
 
 def postQuickRepliesMenu(sender_psid):
     request_body = {
@@ -211,6 +188,16 @@ def postQuickRepliesStatMenu(sender_psid):
     }
     requests.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + os.getenv("page_token"), json=request_body)
 
+def postTextMessage(sender_psid, message):
+    request_body = {
+      "recipient": {
+        "id": sender_psid
+      },
+      "message": {
+        "text": message
+      }
+    }
+    requests.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + os.getenv("page_token"), json=request_body)
 
 
 
