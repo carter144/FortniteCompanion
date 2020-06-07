@@ -39,8 +39,8 @@ class Fortnite:
 
         # Parse out specific stats from json obj
         stats = dict()
-        stats["Name"] = global_stats_json["name"]
-        stats["Level"] = global_stats_json["account"]["level"]
+        stats["Name"] = stats_json_data["name"]
+        stats["Level"] = stats_json_data["account"]["level"]
         stats["K/D"] = retrieved_stats_json["kd"]
         stats["Number of kills"] = retrieved_stats_json["kills"]
         stats["Times placed Top 1"] = retrieved_stats_json["placetop1"]
