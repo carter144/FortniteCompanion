@@ -63,7 +63,7 @@ def handleMessage(sender_psid, received_message):
             username = received_message["text"]
             conversations.removeUserId(sender_psid)
             postPlayerStats(sender_psid, username)
-            postQuickRepliesMenu
+            postQuickRepliesMenu(sender_psid)
         else:
             print("How did I get to the reply part?")
     elif "quick_reply" in received_message:
