@@ -162,7 +162,8 @@ def postPlayerStats(sender_psid):
         "text": '\n'.join(['%s: %s' % (key, value) for (key, value) in stats.items()])
       }
     }
-
+    print('request body')
+    print(request_body)
     requests.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + os.getenv("page_token"), json=request_body)
 
 
