@@ -131,6 +131,18 @@ def getItemShop(sender_psid):
 
 def handleStatsRequest(sender_psid, type):
     username = usernames.getUsernameFrom(sender_psid)
+    if username is None:
+        request_body = {
+            "recipient": {
+                "id": sender_psid
+            },
+            "message": {
+                "text": "Let's retry that!"
+            }
+        }
+        requests.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + os.getenv("page_token"), json=request_body)
+        postQuickRepliesMenu(sender_psid)
+        return
     postPlayerStats(sender_psid, username, type)
     usernames.removeUserId(sender_psid)
     postQuickRepliesMenu(sender_psid)

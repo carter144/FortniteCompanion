@@ -9,4 +9,4 @@ class Usernames:
         self.user_ids.pop(sender_psid)
     
     def getUsernameFrom(self, sender_psid):
-        return self.user_ids[sender_psid]
+        return self.user_ids.get(sender_psid)
