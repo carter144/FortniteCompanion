@@ -1,5 +1,6 @@
 import requests
 import json
+from util import Utils
 
 class Fortnite:
 
@@ -25,8 +26,7 @@ class Fortnite:
                 res.append(item["full_background"])
         return res
 
-
-    def getPlayerStats(self, name):
+    def getPlayerStats(self, name, type):
         r_username = requests.get(f'https://fortniteapi.io/lookup?username={name}', headers={"Authorization": self.api_key})
         account_json_data = r_username.json()
         account_id = account_json_data["account_id"]
@@ -34,11 +34,16 @@ class Fortnite:
         r_account_id = requests.get(f'https://fortniteapi.io/stats?account={account_id}', headers={"Authorization": self.api_key})
         stats_json_data = r_account_id.json()
 
+        global_stats_json = stats_json_data["global_stats"]
+        retrieved_stats_json = global_stats_json[type]
+
         stats = dict()
-        stats["name"] = stats_json_data["name"]
-        stats["level"] = stats_json_data["account"]["level"]
+        stats["K/D"] = retrieved_stats_json["kd"]
+        stats["Number of kills"] = retrieved_stats_json["kills"]
+        stats["Times placed Top 1"] = retrieved_stats_json["placetop1"]
+        stats["Number of matched played"] = retrieved_stats_json["matchesplayed"]
+
+        time_played_in_mins = retrieved_stats_json["minutesplayed"]
+        stats["Total time played"] = Utils.display_time(int(time_played_in_mins) * 60)
         return stats
-
-
-
 

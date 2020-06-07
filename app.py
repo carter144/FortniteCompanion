@@ -5,10 +5,12 @@ from fortnite import Fortnite
 from ContinuedConversations import ContinuedConversations
 import time
 from QuickReplies import QuickReplies
+from usernames import Usernames
 
 app = Flask(__name__)
 fort = Fortnite("0a4b0694-1c21b6f7-b786539b-81c2aa52")
 conversations = ContinuedConversations()
+usernames = Usernames()
 
 @app.route('/webhook', methods=['GET'])
 def get_webhook():
@@ -62,8 +64,8 @@ def handleMessage(sender_psid, received_message):
             # Expect to receive a username from user
             username = received_message["text"]
             conversations.removeUserId(sender_psid)
-            postPlayerStats(sender_psid, username)
-            postQuickRepliesMenu(sender_psid)
+            usernames.addUserIdAndUsername(sender_psid, username)
+            postQuickRepliesStatMenu(sender_psid)
         else:
             print("How did I get to the reply part?")
     elif "quick_reply" in received_message:
@@ -81,6 +83,12 @@ def handleMessage(sender_psid, received_message):
               }
             }
             requests.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + os.getenv("page_token"), json=request_body)
+        elif payload == QuickReplies.SOLO.value:
+            handleStatsRequest(sender_psid, QuickReplies.SOLO.value)
+        elif payload == QuickReplies.DUO.value:
+            handleStatsRequest(sender_psid, QuickReplies.DUO.value)
+        elif payload == QuickReplies.SQUAD.value:
+            handleStatsRequest(sender_psid, QuickReplies.SQUAD.value)
     else:
         postQuickRepliesMenu(sender_psid)
 
@@ -93,29 +101,22 @@ def callSendAPI(sender_psid, response):
         "recipient": {"id": sender_psid},
         "message": response
     }
-
-
     requests.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + os.getenv("page_token"), json=request_body)
+
 def getItemShop(sender_psid):
     image_urls = fort.getShopData()
     request_body = {"batch": []}
 
-    
-    
     for url in image_urls:
-
-
         message_details = {
             "attachment": {
                 "type": "image",
                 "payload": {
-                    
                         "is_reusable": "true",
                         "url": url 
                 }
             }
         }
-
 
         json_obj = {
             "method": "POST",
@@ -125,11 +126,17 @@ def getItemShop(sender_psid):
 
         request_body["batch"].append(json_obj)
         
-        
     requests.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + os.getenv("page_token"), json=request_body)
         
-def postPlayerStats(sender_psid, username):
-    stats = fort.getPlayerStats(username)
+
+def handleStatsRequest(sender_psid, type):
+    username = usernames.getUsernameFrom(sender_psid)
+    postPlayerStats(sender_psid, username, type)
+    usernames.removeUserId(sender_psid)
+    postQuickRepliesMenu(sender_psid)
+
+def postPlayerStats(sender_psid, username, type):
+    stats = fort.getPlayerStats(username, type)
     request_body = {
       "recipient": {
         "id": sender_psid
@@ -165,7 +172,33 @@ def postQuickRepliesMenu(sender_psid):
     requests.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + os.getenv("page_token"), json=request_body)
     
 
+def postQuickRepliesStatMenu(sender_psid):
+        request_body = {
+            "recipient": {"id": sender_psid},
+            "messaging_type": "RESPONSE",
+            "message": {
+                "text": "Which stats?",
+                "quick_replies":[
+                    {
+                        "content_type":"text",
+                        "title":"Solo",
+                        "payload":QuickReplies.SOLO.value
+                    },
+                    {
+                        "content_type":"text",
+                        "title":"Duo",
+                        "payload":QuickReplies.DUO.value,
+                    },
+                                        {
+                        "content_type":"text",
+                        "title":"Squad",
+                        "payload":QuickReplies.SQUAD.value,
+                    },
+                ]
+            }
+        }
 
+    requests.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + os.getenv("page_token"), json=request_body)
 
 
 
