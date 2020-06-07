@@ -79,7 +79,7 @@ def handleMessage(sender_psid, received_message):
                   "text": "Stats for which account name?",
               }
             }
-            conversations.addId(sender_psid, QuickReplies.STATS)
+            conversations.addId(sender_psid, QuickReplies.STATS.value)
             requests.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + os.getenv("page_token"), json=request_body)
     else:
         request_body = {
