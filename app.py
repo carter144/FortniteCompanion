@@ -173,32 +173,32 @@ def postQuickRepliesMenu(sender_psid):
     
 
 def postQuickRepliesStatMenu(sender_psid):
-        request_body = {
-            "recipient": {"id": sender_psid},
-            "messaging_type": "RESPONSE",
-            "message": {
-                "text": "Which stats?",
-                "quick_replies":[
-                    {
-                        "content_type":"text",
-                        "title":"Solo",
-                        "payload":QuickReplies.SOLO.value
-                    },
-                    {
-                        "content_type":"text",
-                        "title":"Duo",
-                        "payload":QuickReplies.DUO.value,
-                    },
-                                        {
-                        "content_type":"text",
-                        "title":"Squad",
-                        "payload":QuickReplies.SQUAD.value,
-                    },
-                ]
-            }
+    request_body = {
+        "recipient": {"id": sender_psid},
+        "messaging_type": "RESPONSE",
+        "message": {
+            "text": "Which stats?",
+            "quick_replies":[
+                {
+                    "content_type":"text",
+                    "title":"Solo",
+                    "payload":QuickReplies.SOLO.value
+                },
+                {
+                    "content_type":"text",
+                    "title":"Duo",
+                    "payload":QuickReplies.DUO.value,
+                },
+                                    {
+                    "content_type":"text",
+                    "title":"Squad",
+                    "payload":QuickReplies.SQUAD.value,
+                },
+            ]
         }
-
+    }
     requests.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + os.getenv("page_token"), json=request_body)
+
 
 
 
