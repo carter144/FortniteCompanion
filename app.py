@@ -70,6 +70,7 @@ def handleMessage(sender_psid, received_message):
         payload = received_message["quick_reply"]["payload"]
         if payload == QuickReplies.SHOP.value:
             getItemShop(sender_psid)
+            postQuickRepliesMenu(sender_psid)
         elif payload == QuickReplies.STATS.value:
             conversations.addUserIdAndConversation(sender_psid, QuickReplies.STATS.value)
             request_body = {
