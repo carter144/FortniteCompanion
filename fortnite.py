@@ -1,5 +1,6 @@
 import requests
 import json
+
 class Fortnite:
 
     def __init__(self, api_key):
@@ -8,8 +9,6 @@ class Fortnite:
 
     def getShopData(self):
         r = requests.get("https://fortniteapi.io/shop?lang=en", headers={"Authorization": self.api_key})
-
-
         return self.parseShopItems(r.text)
 
     def parseShopItems(self, raw_data):
@@ -34,13 +33,10 @@ class Fortnite:
         
         r_account_id = requests.get(f'https://fortniteapi.io/stats?account={account_id}', headers={"Authorization": self.api_key})
         stats_json_data = r_account_id.json()
-        print('stats json')
-        print(json)
+
         stats = dict()
         stats["name"] = stats_json_data["name"]
         stats["level"] = stats_json_data["account"]["level"]
-        print('dict')
-        print(stats)
         return stats
 
 

@@ -56,15 +56,14 @@ def post_webhook():
 
 def handleMessage(sender_psid, received_message):
     #getItemShop(sender_psid)
-    print(received_message)
-    print(conversations.hasUserQuickReplied(sender_psid))
     if conversations.hasUserQuickReplied(sender_psid):
         reply_to_what = conversations.getConversationFrom(sender_psid)
         if reply_to_what == QuickReplies.STATS.value:
             # Expect to receive a username from user
             username = received_message["text"]
+            conversations.removeUserId(sender_psid)
             postPlayerStats(sender_psid, username)
-            conversations.removeId(sender_psid)
+            postQuickRepliesMenu
         else:
             print("How did I get to the reply part?")
     elif "quick_reply" in received_message:
@@ -72,6 +71,7 @@ def handleMessage(sender_psid, received_message):
         if payload == QuickReplies.SHOP.value:
             getItemShop(sender_psid)
         elif payload == QuickReplies.STATS.value:
+            conversations.addUserIdAndConversation(sender_psid, QuickReplies.STATS.value)
             request_body = {
               "recipient": {"id": sender_psid},
               "messaging_type": "RESPONSE",
@@ -79,34 +79,9 @@ def handleMessage(sender_psid, received_message):
                   "text": "Stats for which account name?",
               }
             }
-            conversations.addId(sender_psid, QuickReplies.STATS.value)
             requests.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + os.getenv("page_token"), json=request_body)
     else:
-        request_body = {
-            "recipient": {"id": sender_psid},
-            "messaging_type": "RESPONSE",
-            "message": {
-                "text": "Choose an option:",
-                "quick_replies":[
-                    {
-                        "content_type":"text",
-                        "title":"Item Shop",
-                        "payload":"item_shop",
-                        
-                    },
-                    {
-                        "content_type":"text",
-                        "title":"Stats",
-                        "payload":"stats",
-                        
-                    }
-                ]
-            }
-        }
-        requests.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + os.getenv("page_token"), json=request_body)
-    
-
-
+        postQuickRepliesMenu(sender_psid)
 
 def handlePostback(sender_psid, received_postback):
     print(received_postback)
@@ -162,9 +137,33 @@ def postPlayerStats(sender_psid, username):
         "text": '\n'.join(['%s: %s' % (key, value) for (key, value) in stats.items()])
       }
     }
-    print('request body')
-    print(request_body)
     requests.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + os.getenv("page_token"), json=request_body)
+
+def postQuickRepliesMenu(sender_psid):
+    request_body = {
+            "recipient": {"id": sender_psid},
+            "messaging_type": "RESPONSE",
+            "message": {
+                "text": "Choose an option:",
+                "quick_replies":[
+                    {
+                        "content_type":"text",
+                        "title":"Item Shop",
+                        "payload":"item_shop",
+                        
+                    },
+                    {
+                        "content_type":"text",
+                        "title":"Stats",
+                        "payload":"stats",
+                        
+                    }
+                ]
+            }
+        }
+
+    requests.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + os.getenv("page_token"), json=request_body)
+    
 
 
 

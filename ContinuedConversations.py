@@ -2,10 +2,10 @@ class ContinuedConversations:
     def __init__(self):
         self.user_ids = dict()
 
-    def addId(self, sender_psid, conversation):
+    def addUserIdAndConversation(self, sender_psid, conversation):
         self.user_ids[sender_psid] = conversation
 
-    def removeId(self, sender_psid):
+    def removeUserId(self, sender_psid):
         self.user_ids.pop(sender_psid)
     
     def getConversationFrom(self, sender_psid):
