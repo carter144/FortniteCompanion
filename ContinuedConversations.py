@@ -14,3 +14,6 @@ class ContinuedConversations:
     def hasUserQuickReplied(self, sender_psid):
         return True if sender_psid in self.user_ids else False
 
+    def getUserIds(self):
+        return self.user_ids
+

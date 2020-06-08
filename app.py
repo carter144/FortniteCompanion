@@ -76,6 +76,7 @@ def handleMessage(sender_psid, received_message):
             postQuickRepliesMenu(sender_psid)
         elif payload == QuickReplies.STATS.value:
             conversations.addUserIdAndConversation(sender_psid, QuickReplies.STATS.value)
+            print(conversations.getUserIds())
             postTextMessage(sender_psid, "Stats for which account name?")
         elif payload == QuickReplies.SOLO.value:
             handleStatsRequest(sender_psid, QuickReplies.SOLO.value)
