@@ -6,7 +6,8 @@ class ContinuedConversations:
         self.user_ids[sender_psid] = conversation
 
     def removeUserId(self, sender_psid):
-        self.user_ids.pop(sender_psid)
+        if sender_psid in self.user_ids:
+            self.user_ids.pop(sender_psid)
     
     def getConversationFrom(self, sender_psid):
         return self.user_ids[sender_psid]
