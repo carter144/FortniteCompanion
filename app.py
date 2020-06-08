@@ -126,6 +126,7 @@ def handleStatsRequest(sender_psid, type):
     username = usernames.getUsernameFrom(sender_psid)
     if username is None:
         postTextMessage(sender_psid, "Let's retry that!")
+        conversations.removeUserId(sender_psid)
         postQuickRepliesMenu(sender_psid)
         return
     postPlayerStats(sender_psid, username, type)
