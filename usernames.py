@@ -10,3 +10,5 @@ class Usernames:
     
     def getUsernameFrom(self, sender_psid):
         return self.user_ids.get(sender_psid)
+    def getUsernames(self):
+    	return self.user_ids

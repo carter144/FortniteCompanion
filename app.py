@@ -58,7 +58,9 @@ def post_webhook():
 
 def handleMessage(sender_psid, received_message):
     #getItemShop(sender_psid)
-    print(received_message)
+    print("received_message: ", received_message)
+    print("self.user_ids: ", conversations.getUserIds())
+    print("usernames: ", usernames.getUsernames())
     if conversations.hasUserQuickReplied(sender_psid):
         reply_to_what = conversations.getConversationFrom(sender_psid)
         if reply_to_what == QuickReplies.STATS.value:
