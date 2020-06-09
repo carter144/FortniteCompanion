@@ -142,7 +142,10 @@ def handleStatsRequest(sender_psid, type):
 def postPlayerStats(sender_psid, username, type):
     if type == QuickReplies.ALL.value:
         stats = fort.getPlayerAllStats(username)
-        postTextMessage(sender_psid, '\n'.join(['%s: %s' % (key, value) for (key, value) in stats]))
+        msg = ""
+        for val in stats:
+                msg += f'{val[0]}: {val[1]}\n' if not val[0] else '\n'
+        postTextMessage(sender_psid, msg))
     else:
         stats = fort.getPlayerStats(username, type)
         postTextMessage(sender_psid, '\n'.join(['%s: %s' % (key, value) for (key, value) in stats.items()]))

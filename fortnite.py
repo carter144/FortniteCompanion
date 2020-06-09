@@ -50,7 +50,7 @@ class Fortnite:
         
         for val in lookup_values:
             retrieved_stats_json = global_stats_json[val]
-            stats.append(("Type", str(type).capitalize()))
+            stats.append(("Type", str(val).capitalize()))
             stats.append(("K/D", retrieved_stats_json["kd"]))
             stats.append(("Number of kills", retrieved_stats_json["kills"]))
             stats.append(("Times placed Top 1", retrieved_stats_json["placetop1"]))
@@ -58,7 +58,8 @@ class Fortnite:
 
             time_played_in_mins = retrieved_stats_json["minutesplayed"]
             stats.append(("Total time played", Utils.display_time(int(time_played_in_mins) * 60)))
-            stats.append(("",""))
+            if val != lookup_values[-1]:
+                stats.append(("",""))
         return stats
 
     def getPlayerStats(self, name, type):
