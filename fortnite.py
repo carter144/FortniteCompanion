@@ -1,5 +1,6 @@
 import requests
 import json
+import os
 from util import Utils
 from QuickReplies import QuickReplies
 from ShopItem import ShopItem
