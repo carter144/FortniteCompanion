@@ -29,6 +29,8 @@ class Fortnite:
                 # each item is something in the itemshop
                 image_url = item["full_background"]
                 name = item["name"]
+                print("attachments")
+                print(self.attachments)
                 if not name in self.attachments:
                     response = self.attachment_upload(image_url)
                     self.attachments[name] = response["attachment_id"]
@@ -126,7 +128,5 @@ class Fortnite:
         }
 
         response = requests.post("https://graph.facebook.com/v7.0/me/message_attachments?access_token=" + os.getenv("page_token"), json=request_body)
-        print("did i get here at least?")
-        print(response.json())
         return response.json()
 
