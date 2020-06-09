@@ -6,3 +6,4 @@ class QuickReplies(Enum):
     DUO = 'duo'
     SOLO = 'solo'
     SQUAD = 'squad'
+    ALL = 'all'

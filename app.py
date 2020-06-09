@@ -86,6 +86,8 @@ def handleMessage(sender_psid, received_message):
             handleStatsRequest(sender_psid, QuickReplies.DUO.value)
         elif payload == QuickReplies.SQUAD.value:
             handleStatsRequest(sender_psid, QuickReplies.SQUAD.value)
+        elif payload == QuickReplies.ALL.value:
+            handleStatsRequest(sender_psid, QuickReplies.ALL.value)
     else:
         postQuickRepliesMenu(sender_psid)
 
@@ -138,8 +140,12 @@ def handleStatsRequest(sender_psid, type):
     postQuickRepliesMenu(sender_psid)
 
 def postPlayerStats(sender_psid, username, type):
-    stats = fort.getPlayerStats(username, type)
-    postTextMessage(sender_psid, '\n'.join(['%s: %s' % (key, value) for (key, value) in stats.items()]))
+    if type == QuickReplies.ALL.value:
+        stats = fort.getPlayerAllStats(username)
+        postTextMessage(sender_psid, '\n'.join(['%s: %s' % (key, value) for (key, value) in stats]))
+    else:
+        stats = fort.getPlayerStats(username, type)
+        postTextMessage(sender_psid, '\n'.join(['%s: %s' % (key, value) for (key, value) in stats.items()]))
 
 def postQuickRepliesMenu(sender_psid):
     request_body = {
@@ -173,6 +179,11 @@ def postQuickRepliesStatMenu(sender_psid):
         "message": {
             "text": "Which stats?",
             "quick_replies":[
+                {
+                    "content_type":"text",
+                    "title":"All",
+                    "payload":QuickReplies.ALL.value
+                },
                 {
                     "content_type":"text",
                     "title":"Solo",
