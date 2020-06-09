@@ -61,6 +61,7 @@ def handleMessage(sender_psid, received_message):
     print("received_message: ", received_message)
     print("self.user_ids: ", conversations.getUserIds())
     print("usernames: ", usernames.getUsernames())
+    postToggleSenderAction(sender_psid, True)
     if conversations.hasUserQuickReplied(sender_psid):
         reply_to_what = conversations.getConversationFrom(sender_psid)
         if reply_to_what == QuickReplies.STATS.value:
@@ -90,6 +91,7 @@ def handleMessage(sender_psid, received_message):
             handleStatsRequest(sender_psid, QuickReplies.ALL.value)
     else:
         postQuickRepliesMenu(sender_psid)
+    postToggleSenderAction(sender_psid, False)
 
 def handlePostback(sender_psid, received_postback):
     print(received_postback)
@@ -218,7 +220,15 @@ def postTextMessage(sender_psid, message):
     }
     requests.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + os.getenv("page_token"), json=request_body)
 
-
+# Typing indicator on Facebook messenger
+def postToggleSenderAction(sender_psid, is_typing_on):
+    request_body = {
+        "recipient": {
+            "id": sender_psid
+        },
+        "sender_action": "typing_on" if is_typing_on else "typing_off"
+    }
+    requests.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + os.getenv("page_token"), json=request_body)
 
 if __name__ == '__main__':
     app.run()
