@@ -63,6 +63,7 @@ def handleMessage(sender_psid, received_message):
     print("usernames: ", usernames.getUsernames())
     if conversations.hasUserQuickReplied(sender_psid):
         reply_to_what = conversations.getConversationFrom(sender_psid)
+        postToggleSenderAction(sender_psid, True)
         if reply_to_what == QuickReplies.STATS.value:
             # Expect to receive a username from user
             username = received_message["text"]
@@ -71,14 +72,15 @@ def handleMessage(sender_psid, received_message):
             postQuickRepliesStatMenu(sender_psid)
         else:
             print("How did I get to the reply part?")
+        postToggleSenderAction(sender_psid, False)
     elif "quick_reply" in received_message:
         payload = received_message["quick_reply"]["payload"]
+        postToggleSenderAction(sender_psid, True)
         if payload == QuickReplies.SHOP.value:
             getItemShop(sender_psid)
             postQuickRepliesMenu(sender_psid)
         elif payload == QuickReplies.STATS.value:
             conversations.addUserIdAndConversation(sender_psid, QuickReplies.STATS.value)
-            print(conversations.getUserIds())
             postTextMessage(sender_psid, "Stats for which account name?")
         elif payload == QuickReplies.SOLO.value:
             handleStatsRequest(sender_psid, QuickReplies.SOLO.value)
@@ -86,6 +88,7 @@ def handleMessage(sender_psid, received_message):
             handleStatsRequest(sender_psid, QuickReplies.DUO.value)
         elif payload == QuickReplies.SQUAD.value:
             handleStatsRequest(sender_psid, QuickReplies.SQUAD.value)
+        postToggleSenderAction(sender_psid, False)
     else:
         postQuickRepliesMenu(sender_psid)
 
@@ -204,7 +207,15 @@ def postTextMessage(sender_psid, message):
     }
     requests.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + os.getenv("page_token"), json=request_body)
 
-
+# Typing indicator on Facebook messenger
+def postToggleSenderAction(sender_psid, is_typing_on):
+    request_body = {
+        "recipient": {
+            "id": sender_psid
+        },
+        "sender_action": "typing_on" if is_typing_on else "typing_off"
+    }
+    requests.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + os.getenv("page_token"), json=request_body)
 
 if __name__ == '__main__':
     app.run()
