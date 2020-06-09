@@ -32,6 +32,7 @@ class Fortnite:
                 print("attachments")
                 print(self.attachments)
                 if not name in self.attachments:
+                    print(f'{name} is not in stored attachments')
                     response = self.attachment_upload(image_url)
                     self.attachments[name] = response["attachment_id"]
                 
