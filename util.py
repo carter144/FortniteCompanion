@@ -3,7 +3,7 @@ class Utils:
         pass
 
     @staticmethod
-    def display_time(seconds, granularity=2):
+    def display_time(seconds, granularity=5):
         intervals = (
             ('weeks', 604800),  # 60 * 60 * 24 * 7
             ('days', 86400),    # 60 * 60 * 24

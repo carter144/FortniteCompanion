@@ -45,7 +45,8 @@ class Fortnite:
         stats = []
         stats.append(("Name", stats_json_data["name"]))
         stats.append(("Level", stats_json_data["account"]["level"]))
-
+        stats.append(("",""))
+        
         lookup_values = [QuickReplies.SOLO.value, QuickReplies.DUO.value, QuickReplies.SQUAD.value]
         
         for val in lookup_values:
