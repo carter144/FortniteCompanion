@@ -144,7 +144,7 @@ def postPlayerStats(sender_psid, username, type):
         stats = fort.getPlayerAllStats(username)
         msg = ""
         for val in stats:
-                msg += f'{val[0]}: {val[1]}\n' if not val[0] else '\n'
+                msg += f'{val[0]}: {val[1]}\n' if val[0] else '\n'
         postTextMessage(sender_psid, msg)
     else:
         stats = fort.getPlayerStats(username, type)
