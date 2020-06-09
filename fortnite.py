@@ -126,5 +126,7 @@ class Fortnite:
         }
 
         response = requests.post("https://graph.facebook.com/v7.0/me/message_attachments?access_token=" + os.getenv("page_token"), json=request_body)
+        print("did i get here at least?")
+        print(response.json())
         return response.json()
 
