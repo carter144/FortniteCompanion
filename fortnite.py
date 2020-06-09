@@ -50,7 +50,7 @@ class Fortnite:
         
         for val in lookup_values:
             retrieved_stats_json = global_stats_json[val]
-            stats.append(("Type", type.capitalize()))
+            stats.append(("Type", str(type).capitalize()))
             stats.append(("K/D", retrieved_stats_json["kd"]))
             stats.append(("Number of kills", retrieved_stats_json["kills"]))
             stats.append(("Times placed Top 1", retrieved_stats_json["placetop1"]))
