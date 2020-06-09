@@ -57,7 +57,7 @@ class Fortnite:
             stats.append(("Number of matched played", retrieved_stats_json["matchesplayed"]))
 
             time_played_in_mins = retrieved_stats_json["minutesplayed"]
-            stats.append(("Total time played"], Utils.display_time(int(time_played_in_mins) * 60)))
+            stats.append(("Total time played", Utils.display_time(int(time_played_in_mins) * 60)))
             stats.append(("",""))
         return stats
 
