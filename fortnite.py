@@ -2,6 +2,7 @@ import requests
 import json
 from util import Utils
 from QuickReplies import QuickReplies
+from ItemShop import ItemShop
 
 class Fortnite:
 
@@ -24,7 +25,8 @@ class Fortnite:
             #current_list_of_items is the list of items under featured or list of items under daily etc.
             for item in current_list_of_items:
                 # each item is something in the itemshop
-                res.append(item["full_background"])
+                item = ItemShop(item["name"], item["type"], item["full_background"])
+                res.append(item)
         return res
 
     def getPlayerAllStats(self, name):
@@ -92,4 +94,14 @@ class Fortnite:
         time_played_in_mins = retrieved_stats_json["minutesplayed"]
         stats["Total time played"] = Utils.display_time(int(time_played_in_mins) * 60)
         return stats
+
+    def construct_fortnite_youtube_search_url(self, item):
+        name = item.name
+        item_type = item.item_type
+        
+        search_phrase = (name + ' ' + item_type).replace(" ", "+")
+
+        search_url = f'https://www.youtube.com/results?search_query=fortnite+{search_phrase}'
+        return search_url
+
 

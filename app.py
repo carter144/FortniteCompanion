@@ -105,19 +105,43 @@ def callSendAPI(sender_psid, response):
     requests.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + os.getenv("page_token"), json=request_body)
 
 def getItemShop(sender_psid):
-    image_urls = fort.getShopData()
+    shop_items = fort.getShopData()
     request_body = {"batch": []}
 
-    for url in image_urls:
-        message_details = {
-            "attachment": {
-                "type": "image",
-                "payload": {
+    for item in shop_items:
+        message_details = {}
+        if item.item_type == "emote":
+            message_details = {
+                "attachment": {
+                    "type": "template",
+                    "payload": {
+                        "template_type": "media",
+                        "elements": [
+                            {
+                                "media_type": "image",
+                                "url": item.background_image_url,
+                                "buttons": [
+                                    {
+                                        "type": "web_url",
+                                        "url": fort.construct_fortnite_youtube_search_url(item),
+                                        "title": "See on YouTube",
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }    
+            }
+        else:
+            message_details = {
+                "attachment": {
+                    "type": "image",
+                    "payload": {
                         "is_reusable": "true",
-                        "url": url 
+                        "url": item.background_image_url 
+                    }
                 }
             }
-        }
 
         json_obj = {
             "method": "POST",
