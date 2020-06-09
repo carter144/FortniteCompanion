@@ -119,7 +119,7 @@ def getItemShop(sender_psid):
                         "elements": [
                             {
                                 "media_type": "image",
-                                "url": item.background_image_url,
+                                "attachment_id": item.attachment_id,
                                 "buttons": [
                                     {
                                         "type": "web_url",
@@ -137,8 +137,7 @@ def getItemShop(sender_psid):
                 "attachment": {
                     "type": "image",
                     "payload": {
-                        "is_reusable": "true",
-                        "url": item.background_image_url 
+                        "attachment_id": item.attachment_id
                     }
                 }
             }

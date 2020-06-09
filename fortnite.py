@@ -2,13 +2,14 @@ import requests
 import json
 from util import Utils
 from QuickReplies import QuickReplies
-from ItemShop import ItemShop
+from ShopItem import ShopItem
 
 class Fortnite:
 
     def __init__(self, api_key):
         self.api_key = api_key
-
+        # Name of shop item with attachment ID from Facebook
+        self.attachments = dict()
 
     def getShopData(self):
         r = requests.get("https://fortniteapi.io/shop?lang=en", headers={"Authorization": self.api_key})
@@ -25,7 +26,13 @@ class Fortnite:
             #current_list_of_items is the list of items under featured or list of items under daily etc.
             for item in current_list_of_items:
                 # each item is something in the itemshop
-                item = ItemShop(item["name"], item["type"], item["full_background"])
+                image_url = item["full_background"]
+                name = item["name"]
+                if not name in self.attachments:
+                    response = self.attachment_upload(image_url)
+                    self.attachments[name] = response["attachment_id"]
+                
+                item = ShopItem(name, item["type"], image_url, self.attachments.get(name, None))
                 res.append(item)
         return res
 
@@ -104,4 +111,19 @@ class Fortnite:
         search_url = f'https://www.youtube.com/results?search_query=fortnite+{search_phrase}'
         return search_url
 
+    def attachment_upload(self, url):
+        request_body = {
+            "message":{
+                "attachment":{
+                    "type":"image", 
+                    "payload":{
+                        "is_reusable": "true",
+                        "url": url
+                    }
+                }
+            }
+        }
+
+        response = requests.post("https://graph.facebook.com/v7.0/me/message_attachments?access_token=" + os.getenv("page_token"), json=request_body)
+        return response
 
