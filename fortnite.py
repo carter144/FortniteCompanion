@@ -38,7 +38,7 @@ class Fortnite:
                 
                 item = ShopItem(name, item_type, image_url, self.attachments.get(name, None))
                 res.append(item)
-        return res
+        return sorted(res, key=lambda x: x.item_type)
 
     def getPlayerAllStats(self, name):
         r_username = requests.get(f'https://fortniteapi.io/lookup?username={name}', headers={"Authorization": self.api_key})
