@@ -110,37 +110,49 @@ def getItemShop(sender_psid):
 
     for item in shop_items:
         message_details = {}
-        if item.item_type == "emote":
-            message_details = {
-                "attachment": {
-                    "type": "template",
-                    "payload": {
-                        "template_type": "media",
-                        "elements": [
-                            {
-                                "media_type": "image",
-                                "attachment_id": item.attachment_id,
-                                "buttons": [
-                                    {
-                                        "type": "web_url",
-                                        "url": fort.construct_fortnite_youtube_search_url(item),
-                                        "title": "See on YouTube",
-                                    }
-                                ]
-                            }
-                        ]
+        if item.attachment_id:
+            if item.item_type == "emote":
+                message_details = {
+                    "attachment": {
+                        "type": "template",
+                        "payload": {
+                            "template_type": "media",
+                            "elements": [
+                                {
+                                    "media_type": "image",
+                                    "attachment_id": item.attachment_id,
+                                    "buttons": [
+                                        {
+                                            "type": "web_url",
+                                            "url": fort.construct_fortnite_youtube_search_url(item),
+                                            "title": "See on YouTube",
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }    
+                }
+            else:
+                message_details = {
+                    "attachment": {
+                        "type": "image",
+                        "payload": {
+                            "attachment_id": item.attachment_id
+                        }
                     }
-                }    
-            }
+                }
         else:
             message_details = {
-                "attachment": {
-                    "type": "image",
-                    "payload": {
-                        "attachment_id": item.attachment_id
+                "attachment":{
+                    "type":"image", 
+                    "payload":{
+                        "url":item.background_image_url, 
+                        "is_reusable":true
                     }
                 }
             }
+
 
         json_obj = {
             "method": "POST",

@@ -29,12 +29,14 @@ class Fortnite:
                 # each item is something in the itemshop
                 image_url = item["full_background"]
                 name = item["name"]
-                print("attachments")
-                print(self.attachments)
-                if not name in self.attachments:
-                    print(f'{name} is not in stored attachments')
-                    response = self.attachment_upload(image_url)
-                    self.attachments[name] = response["attachment_id"]
+
+                # This piece of code I think takes too long
+                # print("Attachments")
+                # print(self.attachments)
+                # if not name in self.attachments:
+                #     print(f'{name} is not in stored attachments')
+                #     response = self.attachment_upload(image_url)
+                #     self.attachments[name] = response["attachment_id"]
                 
                 item = ShopItem(name, item["type"], image_url, self.attachments.get(name, None))
                 res.append(item)
