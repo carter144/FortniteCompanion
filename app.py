@@ -265,19 +265,16 @@ def postToggleSenderAction(sender_psid, is_typing_on):
 
 def handle_map_request(sender_psid):
     map_url = fort.get_map_url()
-    message_details = {
-        "attachment":{
-            "type":"image", 
-            "payload":{
-                "url":map_url, 
-                "is_reusable": "true"
+    json_obj = {
+        "message":{
+            "attachment":{
+                "type":"image", 
+                "payload":{
+                    "url":map_url, 
+                    "is_reusable":"true"
+                }
             }
         }
-    }
-    json_obj = {
-        "method": "POST",
-        "relative_url":"me/messages",
-        "body": "recipient={\"id\":\"" + sender_psid + "\"}&message=" + json.dumps(message_details)
     }
     requests.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + os.getenv("page_token"), json=json_obj)
 
