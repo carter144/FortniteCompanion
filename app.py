@@ -148,7 +148,7 @@ def getItemShop(sender_psid):
                     "type":"image", 
                     "payload":{
                         "url":item.background_image_url, 
-                        "is_reusable":true
+                        "is_reusable": "true"
                     }
                 }
             }
