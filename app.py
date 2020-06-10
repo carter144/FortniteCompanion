@@ -81,6 +81,8 @@ def handleMessage(sender_psid, received_message):
             conversations.addUserIdAndConversation(sender_psid, QuickReplies.STATS.value)
             print(conversations.getUserIds())
             postTextMessage(sender_psid, "Stats for which account name?")
+        elif payload == QuickReplies.MAP.value:
+            handle_map_request(sender_psid)
         elif payload == QuickReplies.SOLO.value:
             handleStatsRequest(sender_psid, QuickReplies.SOLO.value)
         elif payload == QuickReplies.DUO.value:
@@ -195,6 +197,11 @@ def postQuickRepliesMenu(sender_psid):
                         "title":"Stats",
                         "payload":"stats",
                         
+                    },
+                    {
+                        "content_type":"text",
+                        "title":"Map",
+                        "payload":QuickReplies.MAP.value,
                     }
                 ]
             }
@@ -255,6 +262,24 @@ def postToggleSenderAction(sender_psid, is_typing_on):
         "sender_action": "typing_on" if is_typing_on else "typing_off"
     }
     requests.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + os.getenv("page_token"), json=request_body)
+
+def handle_map_request(sender_psid):
+    map_url = fort.get_map_url()
+    message_details = {
+        "attachment":{
+            "type":"image", 
+            "payload":{
+                "url":map_url, 
+                "is_reusable": "true"
+            }
+        }
+    }
+    json_obj = {
+        "method": "POST",
+        "relative_url":"me/messages",
+        "body": "recipient={\"id\":\"" + sender_psid + "\"}&message=" + json.dumps(message_details)
+    }
+    requests.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + os.getenv("page_token"), json=json_obj)
 
 if __name__ == '__main__':
     app.run()

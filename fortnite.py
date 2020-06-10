@@ -131,3 +131,6 @@ class Fortnite:
         response = requests.post("https://graph.facebook.com/v7.0/me/message_attachments?access_token=" + os.getenv("page_token"), json=request_body)
         return response.json()
 
+    def get_map_url(self):
+        return "https://media.fortniteapi.io/images/map.png?showPOI=true"
+
