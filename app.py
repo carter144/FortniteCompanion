@@ -133,15 +133,15 @@ def getItemShop(sender_psid):
                         }
                     }    
                 }
-            else:
-                message_details = {
-                    "attachment": {
-                        "type": "image",
-                        "payload": {
-                            "attachment_id": item.attachment_id
-                        }
-                    }
-                }
+            # else:
+            #     message_details = {
+            #         "attachment": {
+            #             "type": "image",
+            #             "payload": {
+            #                 "attachment_id": item.attachment_id
+            #             }
+            #         }
+            #     }
         else:
             message_details = {
                 "attachment":{
