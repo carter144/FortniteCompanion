@@ -125,7 +125,7 @@ def getItemShop(sender_psid):
                                         {
                                             "type": "web_url",
                                             "url": fort.construct_fortnite_youtube_search_url(item),
-                                            "title": "See on YouTube",
+                                            "title": "See Emote on YouTube",
                                         }
                                     ]
                                 }
@@ -133,15 +133,6 @@ def getItemShop(sender_psid):
                         }
                     }    
                 }
-            # else:
-            #     message_details = {
-            #         "attachment": {
-            #             "type": "image",
-            #             "payload": {
-            #                 "attachment_id": item.attachment_id
-            #             }
-            #         }
-            #     }
         else:
             message_details = {
                 "attachment":{

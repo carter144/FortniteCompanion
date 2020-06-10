@@ -29,13 +29,10 @@ class Fortnite:
                 # each item is something in the itemshop
                 image_url = item["full_background"]
                 name = item["name"]
-
-                # This piece of code I think takes too long
-                print("Attachments")
-                print(self.attachments)
                 item_type = item["type"]
-                if not name in self.attachments and item_type == "emote":
-                    print(f'{name} is not in stored attachments')
+
+                # Only do emotes for the time being because this process takes awhile. Need attachment IDs for templates
+                if item_type == "emote" and not name in self.attachments:
                     response = self.attachment_upload(image_url)
                     self.attachments[name] = response["attachment_id"]
                 
