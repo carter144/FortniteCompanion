@@ -265,7 +265,10 @@ def postToggleSenderAction(sender_psid, is_typing_on):
 
 def handle_map_request(sender_psid):
     map_url = fort.get_map_url()
-    json_obj = {
+    request_body = {
+      "recipient": {
+        "id": sender_psid
+      },
         "message":{
             "attachment":{
                 "type":"image", 
@@ -276,7 +279,7 @@ def handle_map_request(sender_psid):
             }
         }
     }
-    requests.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + os.getenv("page_token"), json=json_obj)
+    requests.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + os.getenv("page_token"), json=request_body)
 
 if __name__ == '__main__':
     app.run()
