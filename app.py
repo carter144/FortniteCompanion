@@ -183,7 +183,7 @@ def postQuickRepliesMenu(sender_psid):
             "recipient": {"id": sender_psid},
             "messaging_type": "RESPONSE",
             "message": {
-                "text": "Choose an option:",
+                "text": "What do you want to see?",
                 "quick_replies":[
                     {
                         "content_type":"text",
