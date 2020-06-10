@@ -83,6 +83,10 @@ def handleMessage(sender_psid, received_message):
             postTextMessage(sender_psid, "Stats for which account name?")
         elif payload == QuickReplies.MAP.value:
             handle_map_request(sender_psid)
+            postQuickRepliesMenu(sender_psid)
+        elif payload == QuickReplies.VISIT.value:
+            handle_visit_request(sender_psid)
+            postQuickRepliesMenu(sender_psid)
         elif payload == QuickReplies.SOLO.value:
             handleStatsRequest(sender_psid, QuickReplies.SOLO.value)
         elif payload == QuickReplies.DUO.value:
@@ -202,6 +206,11 @@ def postQuickRepliesMenu(sender_psid):
                         "content_type":"text",
                         "title":"Map",
                         "payload":QuickReplies.MAP.value,
+                    },
+                    {
+                        "content_type":"text",
+                        "title":"Visit",
+                        "payload": QuickReplies.VISIT.value
                     }
                 ]
             }
@@ -275,6 +284,49 @@ def handle_map_request(sender_psid):
                 "payload":{
                     "url":map_url, 
                     "is_reusable":"true"
+                }
+            }
+        }
+    }
+    requests.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + os.getenv("page_token"), json=request_body)
+
+def handle_visit_request(sender_psid):
+    request_body = {
+        "recipient":{
+        "id":sender_psid
+        },
+        "message":{
+            "attachment":{
+                "type":"template",
+                "payload":{
+                    "template_type":"generic",
+                    "elements": [
+                        {
+                            "title": "Epic Games Pages",
+                            "image_url": "https://scontent-iad3-1.xx.fbcdn.net/v/t1.0-9/91851488_3244434952300473_5794185880470028288_o.jpg?_nc_cat=1&_nc_sid=6e5ad9&_nc_ohc=5XGV1tip8FMAX-bZMQJ&_nc_ht=scontent-iad3-1.xx&oh=60a041c0fda33d76af32975b35355022&oe=5F071E08",
+                            "subtitle":"View extra content",
+                            "buttons":[
+                                {
+                                    "type":"web_url",
+                                    "url":"https://www.epicgames.com",
+                                    "title":"Epic Games Website",
+                                    "webview_height_ratio": "full"
+                                }
+                                {
+                                    "type":"web_url",
+                                    "url":"https://www.facebook.com/FortniteGame/",
+                                    "title":"Fortnite Facebook",
+                                    "webview_height_ratio": "full"
+                                },
+                                {
+                                    "type":"web_url",
+                                    "url":"https://www.facebook.com/epicgames/",
+                                    "title":"Epic Games Facebook",
+                                    "webview_height_ratio": "full"
+                                }
+                            ]
+                        }
+                    ]
                 }
             }
         }
