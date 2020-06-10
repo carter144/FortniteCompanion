@@ -311,7 +311,7 @@ def handle_visit_request(sender_psid):
                                     "url":"https://www.epicgames.com",
                                     "title":"Epic Games Website",
                                     "webview_height_ratio": "full"
-                                }
+                                },
                                 {
                                     "type":"web_url",
                                     "url":"https://www.facebook.com/FortniteGame/",
