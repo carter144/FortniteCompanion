@@ -70,7 +70,6 @@ class Fortnite:
                 continue
             retrieved_stats_json = global_stats_json[val]
             stats.append(("Type", str(val).capitalize()))
-            stats.append(("K/D", retrieved_stats_json["kd"]))
             stats.append(("K/D", retrieved_stats_json.get("kd", "0")))
             stats.append(("Number of kills", retrieved_stats_json.get("kills", "0")))
             stats.append(("Times placed Top 1", retrieved_stats_json.get("placetop1", "0")))

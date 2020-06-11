@@ -181,7 +181,7 @@ def post_player_stats(sender_psid, username, stat_type):
 
     msg = ""
     for val in stats:
-        if not val[1]:
+        if val[1] == "":
             msg += f'{val[0]}\n'
         elif val[0]:
             msg += f'{val[0]}: {val[1]}\n'
