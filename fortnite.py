@@ -71,11 +71,12 @@ class Fortnite:
             retrieved_stats_json = global_stats_json[val]
             stats.append(("Type", str(val).capitalize()))
             stats.append(("K/D", retrieved_stats_json["kd"]))
-            stats.append(("Number of kills", retrieved_stats_json["kills"]))
-            stats.append(("Times placed Top 1", retrieved_stats_json["placetop1"]))
-            stats.append(("Number of matched played", retrieved_stats_json["matchesplayed"]))
+            stats.append(("K/D", retrieved_stats_json.get("kd", "0")))
+            stats.append(("Number of kills", retrieved_stats_json.get("kills", "0")))
+            stats.append(("Times placed Top 1", retrieved_stats_json.get("placetop1", "0")))
+            stats.append(("Number of matched played", retrieved_stats_json.get("matchesplayed", "0")))
 
-            time_played_in_mins = retrieved_stats_json["minutesplayed"]
+            time_played_in_mins = retrieved_stats_json.get("minutesplayed", "0")
             stats.append(("Total time played", Utils.display_time(int(time_played_in_mins) * 60)))
             if val != lookup_values[-1]:
                 stats.append(("",""))
@@ -108,12 +109,12 @@ class Fortnite:
         stats.append(("Level", stats_json_data["account"]["level"]))
         stats.append(("",""))
         stats.append(("Type", str(stat_type).capitalize()))
-        stats.append(("K/D", retrieved_stats_json["kd"]))
-        stats.append(("Number of kills", retrieved_stats_json["kills"]))
-        stats.append(("Times placed Top 1", retrieved_stats_json["placetop1"]))
-        stats.append(("Number of matched played", retrieved_stats_json["matchesplayed"]))
+        stats.append(("K/D", retrieved_stats_json.get("kd", "0")))
+        stats.append(("Number of kills", retrieved_stats_json.get("kills", "0")))
+        stats.append(("Times placed Top 1", retrieved_stats_json.get("placetop1", "0")))
+        stats.append(("Number of matched played", retrieved_stats_json.get("matchesplayed", "0")))
 
-        time_played_in_mins = retrieved_stats_json["minutesplayed"]
+        time_played_in_mins = retrieved_stats_json.get("minutesplayed", "0")
         stats.append(("Total time played", Utils.display_time(int(time_played_in_mins) * 60)))
         return stats
 
