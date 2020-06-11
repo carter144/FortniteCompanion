@@ -47,7 +47,7 @@ class Fortnite:
             account_id = account_json_data["account_id"]
         else:
             stats = []
-            stats.append(("Name", f'{name} does not exist in database'))
+            stats.append((f'{name} does not exist in Fortnite', ''))
             return stats
         
         r_account_id = requests.get(f'https://fortniteapi.io/stats?account={account_id}', headers={"Authorization": self.api_key})
@@ -65,6 +65,8 @@ class Fortnite:
         for val in lookup_values:
             if val not in global_stats_json:
                 stats.append((f'No {str(val).capitalize()} stats available', ""))
+                if val != lookup_values[-1]:
+                    stats.append(("",""))
                 continue
             retrieved_stats_json = global_stats_json[val]
             stats.append(("Type", str(val).capitalize()))
