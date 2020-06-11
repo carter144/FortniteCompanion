@@ -61,7 +61,7 @@ def handleMessage(sender_psid, received_message):
     print("received_message: ", received_message)
     print("self.user_ids: ", conversations.getUserIds())
     print("usernames: ", usernames.getUsernames())
-    postToggleSenderAction(sender_psid, True)
+    post_toggle_sender_action(sender_psid, True)
     if conversations.hasUserQuickReplied(sender_psid):
         reply_to_what = conversations.getConversationFrom(sender_psid)
         if reply_to_what == QuickReplies.STATS.value:
@@ -69,35 +69,35 @@ def handleMessage(sender_psid, received_message):
             username = received_message["text"]
             conversations.removeUserId(sender_psid)
             usernames.addUserIdAndUsername(sender_psid, username)
-            postQuickRepliesStatMenu(sender_psid)
+            post_quick_replies_stat_menu(sender_psid)
         else:
             print("How did I get to the reply part?")
     elif "quick_reply" in received_message:
         payload = received_message["quick_reply"]["payload"]
         if payload == QuickReplies.SHOP.value:
             getItemShop(sender_psid)
-            postQuickRepliesMenu(sender_psid)
+            post_quick_replies_menu(sender_psid)
         elif payload == QuickReplies.STATS.value:
             conversations.addUserIdAndConversation(sender_psid, QuickReplies.STATS.value)
             print(conversations.getUserIds())
-            postTextMessage(sender_psid, "Stats for which account name?")
+            post_text_message(sender_psid, "Stats for which account name?")
         elif payload == QuickReplies.MAP.value:
             handle_map_request(sender_psid)
-            postQuickRepliesMenu(sender_psid)
+            post_quick_replies_menu(sender_psid)
         elif payload == QuickReplies.VISIT.value:
             handle_visit_request(sender_psid)
-            postQuickRepliesMenu(sender_psid)
+            post_quick_replies_menu(sender_psid)
         elif payload == QuickReplies.SOLO.value:
-            handleStatsRequest(sender_psid, QuickReplies.SOLO.value)
+            handle_stats_request(sender_psid, QuickReplies.SOLO.value)
         elif payload == QuickReplies.DUO.value:
-            handleStatsRequest(sender_psid, QuickReplies.DUO.value)
+            handle_stats_request(sender_psid, QuickReplies.DUO.value)
         elif payload == QuickReplies.SQUAD.value:
-            handleStatsRequest(sender_psid, QuickReplies.SQUAD.value)
+            handle_stats_request(sender_psid, QuickReplies.SQUAD.value)
         elif payload == QuickReplies.ALL.value:
-            handleStatsRequest(sender_psid, QuickReplies.ALL.value)
+            handle_stats_request(sender_psid, QuickReplies.ALL.value)
     else:
-        postQuickRepliesMenu(sender_psid)
-    postToggleSenderAction(sender_psid, False)
+        post_quick_replies_menu(sender_psid)
+    post_toggle_sender_action(sender_psid, False)
 
 def handlePostback(sender_psid, received_postback):
     print(received_postback)
@@ -150,7 +150,6 @@ def getItemShop(sender_psid):
                 }
             }
 
-
         json_obj = {
             "method": "POST",
             "relative_url":"me/messages",
@@ -162,69 +161,70 @@ def getItemShop(sender_psid):
     requests.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + os.getenv("page_token"), json=request_body)
         
 
-def handleStatsRequest(sender_psid, type):
+def handle_stats_request(sender_psid, stat_type):
     username = usernames.getUsernameFrom(sender_psid)
     if username is None:
-        postTextMessage(sender_psid, "Let's retry that!")
+        post_text_message(sender_psid, "Let's retry that!")
         conversations.removeUserId(sender_psid)
-        postQuickRepliesMenu(sender_psid)
+        post_quick_replies_menu(sender_psid)
         return
-    postPlayerStats(sender_psid, username, type)
+    post_player_stats(sender_psid, username, stat_type)
     usernames.removeUserId(sender_psid)
-    postQuickRepliesMenu(sender_psid)
+    post_quick_replies_menu(sender_psid)
 
-def postPlayerStats(sender_psid, username, type):
-    if type == QuickReplies.ALL.value:
+def post_player_stats(sender_psid, username, stat_type):
+    stats = []
+    if stat_type == QuickReplies.ALL.value:
         stats = fort.getPlayerAllStats(username)
-        msg = ""
-        for val in stats:
-            if not val[1]:
-                msg += f'{val[0]}\n'
-            elif val[0]:
-                msg += f'{val[0]}: {val[1]}\n'
-            else:
-                msg += '\n'
-        postTextMessage(sender_psid, msg)
     else:
-        stats = fort.getPlayerStats(username, type)
-        postTextMessage(sender_psid, '\n'.join(['%s: %s' % (key, value) for (key, value) in stats.items()]))
+        stats = fort.getPlayerStats(username, stat_type)
 
-def postQuickRepliesMenu(sender_psid):
+    msg = ""
+    for val in stats:
+        if not val[1]:
+            msg += f'{val[0]}\n'
+        elif val[0]:
+            msg += f'{val[0]}: {val[1]}\n'
+        else:
+            msg += '\n'
+    post_text_message(sender_psid, msg)
+
+def post_quick_replies_menu(sender_psid):
     request_body = {
-            "recipient": {"id": sender_psid},
-            "messaging_type": "RESPONSE",
-            "message": {
-                "text": "What do you want to see?",
-                "quick_replies":[
-                    {
-                        "content_type":"text",
-                        "title":"Item Shop",
-                        "payload":"item_shop"
-                    },
-                    {
-                        "content_type":"text",
-                        "title":"Stats",
-                        "payload":"stats",
-                        
-                    },
-                    {
-                        "content_type":"text",
-                        "title":"Map",
-                        "payload":QuickReplies.MAP.value,
-                    },
-                    {
-                        "content_type":"text",
-                        "title":"Visit",
-                        "payload": QuickReplies.VISIT.value
-                    }
-                ]
-            }
+        "recipient": {"id": sender_psid},
+        "messaging_type": "RESPONSE",
+        "message": {
+            "text": "What do you want to see?",
+            "quick_replies":[
+                {
+                    "content_type":"text",
+                    "title":"Item Shop",
+                    "payload":"item_shop"
+                },
+                {
+                    "content_type":"text",
+                    "title":"Stats",
+                    "payload":"stats",
+                    
+                },
+                {
+                    "content_type":"text",
+                    "title":"Map",
+                    "payload":QuickReplies.MAP.value,
+                },
+                {
+                    "content_type":"text",
+                    "title":"Visit",
+                    "payload": QuickReplies.VISIT.value
+                }
+            ]
         }
+    }
 
     requests.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + os.getenv("page_token"), json=request_body)
     
 
-def postQuickRepliesStatMenu(sender_psid):
+def post_quick_replies_stat_menu(sender_psid):
     request_body = {
         "recipient": {"id": sender_psid},
         "messaging_type": "RESPONSE",
@@ -256,7 +256,7 @@ def postQuickRepliesStatMenu(sender_psid):
     }
     requests.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + os.getenv("page_token"), json=request_body)
 
-def postTextMessage(sender_psid, message):
+def post_text_message(sender_psid, message):
     request_body = {
       "recipient": {
         "id": sender_psid
@@ -268,7 +268,7 @@ def postTextMessage(sender_psid, message):
     requests.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + os.getenv("page_token"), json=request_body)
 
 # Typing indicator on Facebook messenger
-def postToggleSenderAction(sender_psid, is_typing_on):
+def post_toggle_sender_action(sender_psid, is_typing_on):
     request_body = {
         "recipient": {
             "id": sender_psid
