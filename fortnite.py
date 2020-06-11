@@ -95,6 +95,11 @@ class Fortnite:
         
         stats_json_data = r_account_id.json()
         global_stats_json = stats_json_data["global_stats"]
+        if stat_type not in global_stats_json:
+            stats = []
+            stats.append((f'No {str(stat_type).capitalize()} stats available for {name}', ""))
+            return stats
+
         retrieved_stats_json = global_stats_json[stat_type]
 
         # Parse out specific stats from json obj
