@@ -81,6 +81,9 @@ def handleMessage(sender_psid, received_message):
             conversations.addUserIdAndConversation(sender_psid, QuickReplies.STATS.value)
             print(conversations.getUserIds())
             post_text_message(sender_psid, "Stats for which account name?")
+        elif payload == QuickReplies.DAILY_EMOTES.value:
+            get_shop_emotes(sender_psid)
+            post_quick_replies_menu(sender_psid)
         elif payload == QuickReplies.MAP.value:
             handle_map_request(sender_psid)
             post_quick_replies_menu(sender_psid)

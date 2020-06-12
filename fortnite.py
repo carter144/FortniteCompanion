@@ -14,6 +14,8 @@ class Fortnite:
 
     def getShopData(self):
         r = requests.get("https://fortniteapi.io/shop?lang=en", headers={"Authorization": self.api_key})
+        print("Attachment IDs")
+        print(self.attachments)
         return self.parseShopItems(r.text)
 
     def parseShopItems(self, raw_data):
@@ -42,6 +44,8 @@ class Fortnite:
 
     def getShopEmotes(self):
         r = requests.get("https://fortniteapi.io/shop?lang=en", headers={"Authorization": self.api_key})
+        print("Attachment IDs")
+        print(self.attachments)
         return self.parseShopEmotes(r.text)
 
     def parseShopEmotes(self, raw_data):
