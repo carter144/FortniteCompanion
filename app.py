@@ -160,6 +160,55 @@ def getItemShop(sender_psid):
         
     requests.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + os.getenv("page_token"), json=request_body)
         
+def get_shop_emotes(sender_psid):
+    shop_items = fort.getShopEmotes()
+    request_body = {"batch": []}
+    for item in shop_items:
+        message_details = {}
+        if item.attachment_id:
+            if item.item_type == "emote":
+                message_details = {
+                    "attachment": {
+                        "type": "template",
+                        "payload": {
+                            "template_type": "media",
+                            "elements": [
+                                {
+                                    "media_type": "image",
+                                    "attachment_id": item.attachment_id,
+                                    "buttons": [
+                                        {
+                                            "type": "web_url",
+                                            "url": fort.construct_fortnite_youtube_search_url(item),
+                                            "title": "See Emote on YouTube",
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }    
+                }
+        else:
+            message_details = {
+                "attachment":{
+                    "type":"image", 
+                    "payload":{
+                        "url":item.background_image_url, 
+                        "is_reusable": "true"
+                    }
+                }
+            }
+
+        json_obj = {
+            "method": "POST",
+            "relative_url":"me/messages",
+            "body": "recipient={\"id\":\"" + sender_psid + "\"}&message=" + json.dumps(message_details)
+        }
+
+        request_body["batch"].append(json_obj)
+        
+    requests.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + os.getenv("page_token"), json=request_body)
+
 
 def handle_stats_request(sender_psid, stat_type):
     username = usernames.getUsernameFrom(sender_psid)
@@ -201,6 +250,11 @@ def post_quick_replies_menu(sender_psid):
                     "title":"Item Shop",
                     "payload":"item_shop"
                 },
+                {
+                    "content_type":"text",
+                    "title":"Daily Emotes",
+                    "payload":QuickReplies.DAILY_EMOTES.value
+                }
                 {
                     "content_type":"text",
                     "title":"Stats",

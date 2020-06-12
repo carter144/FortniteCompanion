@@ -32,7 +32,36 @@ class Fortnite:
                 item_type = item["type"]
 
                 # Only do emotes for the time being because this process takes awhile. Need attachment IDs for templates
-                if item_type == "emote" and not name in self.attachments:
+                # if item_type == "emote" and not name in self.attachments:
+                #     response = self.attachment_upload(image_url)
+                #     self.attachments[name] = response["attachment_id"]
+                
+                item = ShopItem(name, item_type, image_url, self.attachments.get(name, None))
+                res.append(item)
+        return res
+
+    def getShopEmotes(self):
+        r = requests.get("https://fortniteapi.io/shop?lang=en", headers={"Authorization": self.api_key})
+        return self.parseShopEmotes(r.text)
+
+    def parseShopEmotes(self, raw_data):
+        json_data = json.loads(raw_data)
+        res = []
+        # json_data.keys(): daily, featured, special, etc
+        for key in json_data.keys():
+            current_list_of_items = json_data[key]
+            if type(current_list_of_items) is not list:
+                continue
+            #current_list_of_items is the list of items under featured or list of items under daily etc.
+            for item in current_list_of_items:
+                # each item is something in the itemshop
+                item_type = item["type"]
+                if item_type != "emote":
+                    continue
+                image_url = item["full_background"]
+                name = item["name"]
+
+                if not name in self.attachments:
                     response = self.attachment_upload(image_url)
                     self.attachments[name] = response["attachment_id"]
                 
