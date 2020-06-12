@@ -254,7 +254,7 @@ def post_quick_replies_menu(sender_psid):
                     "content_type":"text",
                     "title":"Daily Emotes",
                     "payload":QuickReplies.DAILY_EMOTES.value
-                }
+                },
                 {
                     "content_type":"text",
                     "title":"Stats",
