@@ -307,7 +307,7 @@ def post_quick_replies_stat_menu(sender_psid):
                     "title":"Duo",
                     "payload":QuickReplies.DUO.value
                 },
-                                    {
+                {
                     "content_type":"text",
                     "title":"Squad",
                     "payload":QuickReplies.SQUAD.value
@@ -315,6 +315,7 @@ def post_quick_replies_stat_menu(sender_psid):
             ]
         }
     }
+    print("BODY: ", request_body)
     requests.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + os.getenv("page_token"), json=request_body)
 
 def post_text_message(sender_psid, message):
