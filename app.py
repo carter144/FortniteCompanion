@@ -67,9 +67,13 @@ def handleMessage(sender_psid, received_message):
         if reply_to_what == QuickReplies.STATS.value:
             # Expect to receive a username from user
             username = received_message["text"]
+            print("USERNAME IS: ", username)
             conversations.removeUserId(sender_psid)
+            print("removed: ", sender_psid)
             usernames.addUserIdAndUsername(sender_psid, username)
+            print("User added: ", sender_psid, username)
             post_quick_replies_stat_menu(sender_psid)
+            print("SENT MESSAGE")
         else:
             print("How did I get to the reply part?")
     elif "quick_reply" in received_message:
