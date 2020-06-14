@@ -305,13 +305,13 @@ def post_quick_replies_stat_menu(sender_psid):
                 {
                     "content_type":"text",
                     "title":"Duo",
-                    "payload":QuickReplies.DUO.value,
+                    "payload":QuickReplies.DUO.value
                 },
                                     {
                     "content_type":"text",
                     "title":"Squad",
-                    "payload":QuickReplies.SQUAD.value,
-                },
+                    "payload":QuickReplies.SQUAD.value
+                }
             ]
         }
     }
