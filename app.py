@@ -47,7 +47,7 @@ def post_webhook():
             
             if webhook_event["message"]:
                 #IF QUICK REPLIED ITEMSHOP
-                if "quick_reply" in webhook_event["message"] and received_message["quick_reply"]["payload"] == QuickReplies.SHOP.value:
+                if "quick_reply" in webhook_event["message"] and webhook_event["message"]["quick_reply"]["payload"] == QuickReplies.SHOP.value:
                     t = threading.Thread(target=getItemShop(sender_psid))
                     t.start()
                     return "EVENT_RECEIVED"
