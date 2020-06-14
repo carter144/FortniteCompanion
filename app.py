@@ -53,27 +53,25 @@ def post_webhook():
     else:
         return json.dumps({'success':False}), 403, {'ContentType':'application/json'}
 
-    return json.dumps(data)
+    return "EVENT_RECEIVED"
   
 
 def handleMessage(sender_psid, received_message):
     #getItemShop(sender_psid)
-    print("received_message: ", received_message)
-    print("self.user_ids: ", conversations.getUserIds())
-    print("usernames: ", usernames.getUsernames())
+
     post_toggle_sender_action(sender_psid, True)
     if conversations.hasUserQuickReplied(sender_psid):
         reply_to_what = conversations.getConversationFrom(sender_psid)
         if reply_to_what == QuickReplies.STATS.value:
             # Expect to receive a username from user
             username = received_message["text"]
-            print("USERNAME IS: ", username)
+
             conversations.removeUserId(sender_psid)
-            print("removed: ", sender_psid)
+            
             usernames.addUserIdAndUsername(sender_psid, username)
-            print("User added: ", sender_psid, username)
+            
             post_quick_replies_stat_menu(sender_psid)
-            print("SENT MESSAGE")
+            
         else:
             print("How did I get to the reply part?")
     elif "quick_reply" in received_message:
