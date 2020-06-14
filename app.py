@@ -162,7 +162,7 @@ def getItemShop(sender_psid):
         }
 
         request_body["batch"].append(json_obj)
-        
+    print("Attempting to send request...")
     response = requests.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + os.getenv("page_token"), json=request_body)
     print("response: ", response)
     print("response status code: ", response.status_code)
