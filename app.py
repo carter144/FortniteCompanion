@@ -163,7 +163,9 @@ def getItemShop(sender_psid):
 
         request_body["batch"].append(json_obj)
         
-    requests.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + os.getenv("page_token"), json=request_body)
+    response = requests.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + os.getenv("page_token"), json=request_body)
+    print("response: ", response)
+    print("response status code: ", response.status_code)
         
 def get_shop_emotes(sender_psid):
     shop_items = fort.getShopEmotes()
