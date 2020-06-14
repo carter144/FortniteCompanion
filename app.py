@@ -128,6 +128,7 @@ def callSendAPI(sender_psid, response):
 
 def getItemShop(sender_psid):
     post_toggle_sender_action(sender_psid, True)
+    time.sleep(20)
     shop_items = fort.getShopData()
     request_body = {"batch": []}
 
