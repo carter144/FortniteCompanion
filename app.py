@@ -53,7 +53,7 @@ def post_webhook():
     else:
         return json.dumps({'success':False}), 403, {'ContentType':'application/json'}
 
-    return "EVENT_RECEIVED"
+    return json.dumps(data)
   
 
 def handleMessage(sender_psid, received_message):
