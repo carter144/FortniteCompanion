@@ -8,5 +8,5 @@ class QuickReplies(Enum):
     DUO = 'duo'
     SOLO = 'solo'
     SQUAD = 'squad'
-    ALL = 'all',
+    ALL = 'all'
     DAILY_EMOTES = 'daily_emotes'
