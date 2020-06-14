@@ -84,13 +84,13 @@ def handleMessage(sender_psid, received_message):
             print("How did I get to the reply part?")
     elif "quick_reply" in received_message:
         payload = received_message["quick_reply"]["payload"]
-        if payload == QuickReplies.SHOP.value:
+        #if payload == QuickReplies.SHOP.value:
             #getItemShop(sender_psid)
             
             #t = threading.Thread(target=getItemShop(sender_psid))
             #t.start()
             #post_quick_replies_menu(sender_psid)
-        elif payload == QuickReplies.STATS.value:
+        if payload == QuickReplies.STATS.value:
             conversations.addUserIdAndConversation(sender_psid, QuickReplies.STATS.value)
             print(conversations.getUserIds())
             post_text_message(sender_psid, "Stats for which account name?")
