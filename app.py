@@ -34,6 +34,8 @@ def get_webhook():
             return challenge
         else:
             return json.dumps({'success':False}), 403, {'ContentType':'application/json'} 
+    else:
+        return render_template("privacy_policy.html")
 
 @app.route('/webhook', methods=['POST'])
 def post_webhook():
@@ -128,7 +130,7 @@ def callSendAPI(sender_psid, response):
 
 def getItemShop(sender_psid):
     post_toggle_sender_action(sender_psid, True)
-    
+
     shop_items = fort.getShopData()
     request_body = {"batch": []}
 
