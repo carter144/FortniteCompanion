@@ -35,7 +35,15 @@ def get_webhook():
         else:
             return json.dumps({'success':False}), 403, {'ContentType':'application/json'} 
     else:
-        return render_template("privacy_policy.html")
+        return
+
+
+@app.route('/', methods=['GET'])
+def get_home():
+
+    
+    return render_template("privacy_policy.html")
+
 
 @app.route('/webhook', methods=['POST'])
 def post_webhook():
