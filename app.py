@@ -1,4 +1,4 @@
-from flask import Flask, json, request
+from flask import Flask, json, request, render_template
 import requests
 import os
 from fortnite import Fortnite
