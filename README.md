@@ -12,7 +12,7 @@ We built the webhook server with Python and hosted it on Heroku. We used the htt
 
 ## Starting up the bot
 
-![Initiate bot](./screenshots/initiate.png)
+![Initiate bot](./screenshots/Initiate.png)
 
 ## Pressing Item Shop
 
