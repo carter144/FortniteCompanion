@@ -1,4 +1,4 @@
-from flask import Flask, json, request
+from flask import Flask, json, request, render_template
 import requests
 import os
 from fortnite import Fortnite
@@ -6,6 +6,7 @@ from ContinuedConversations import ContinuedConversations
 import time
 from QuickReplies import QuickReplies
 from usernames import Usernames
+import threading
 
 app = Flask(__name__)
 fort = Fortnite("0a4b0694-1c21b6f7-b786539b-81c2aa52")
@@ -33,6 +34,16 @@ def get_webhook():
             return challenge
         else:
             return json.dumps({'success':False}), 403, {'ContentType':'application/json'} 
+    else:
+        return
+
+
+@app.route('/', methods=['GET'])
+def get_home():
+
+    
+    return render_template("privacy_policy.html")
+
 
 @app.route('/webhook', methods=['POST'])
 def post_webhook():
@@ -45,7 +56,14 @@ def post_webhook():
             sender_psid = webhook_event["sender"]["id"]
             
             if webhook_event["message"]:
-                handleMessage(sender_psid, webhook_event["message"])
+                #IF QUICK REPLIED ITEMSHOP
+                if "quick_reply" in webhook_event["message"] and webhook_event["message"]["quick_reply"]["payload"] == QuickReplies.SHOP.value:
+                    t = threading.Thread(target=getItemShop(sender_psid))
+                    t.start()
+                    return "EVENT_RECEIVED"
+                else:
+                    # EVERYTHING ELSE GOES IN HERE
+                    handleMessage(sender_psid, webhook_event["message"])
             elif webhook_event["postback"]:
                 handlePostback(sender_psid, webhook_event["postback"])
         return "EVENT_RECEIVED"
@@ -58,26 +76,31 @@ def post_webhook():
 
 def handleMessage(sender_psid, received_message):
     #getItemShop(sender_psid)
-    print("received_message: ", received_message)
-    print("self.user_ids: ", conversations.getUserIds())
-    print("usernames: ", usernames.getUsernames())
+
     post_toggle_sender_action(sender_psid, True)
     if conversations.hasUserQuickReplied(sender_psid):
         reply_to_what = conversations.getConversationFrom(sender_psid)
         if reply_to_what == QuickReplies.STATS.value:
             # Expect to receive a username from user
             username = received_message["text"]
+
             conversations.removeUserId(sender_psid)
+            
             usernames.addUserIdAndUsername(sender_psid, username)
+            
             post_quick_replies_stat_menu(sender_psid)
+            
         else:
             print("How did I get to the reply part?")
     elif "quick_reply" in received_message:
         payload = received_message["quick_reply"]["payload"]
-        if payload == QuickReplies.SHOP.value:
-            getItemShop(sender_psid)
-            post_quick_replies_menu(sender_psid)
-        elif payload == QuickReplies.STATS.value:
+        #if payload == QuickReplies.SHOP.value:
+            #getItemShop(sender_psid)
+            
+            #t = threading.Thread(target=getItemShop(sender_psid))
+            #t.start()
+            #post_quick_replies_menu(sender_psid)
+        if payload == QuickReplies.STATS.value:
             conversations.addUserIdAndConversation(sender_psid, QuickReplies.STATS.value)
             print(conversations.getUserIds())
             post_text_message(sender_psid, "Stats for which account name?")
@@ -114,35 +137,13 @@ def callSendAPI(sender_psid, response):
     requests.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + os.getenv("page_token"), json=request_body)
 
 def getItemShop(sender_psid):
+    post_toggle_sender_action(sender_psid, True)
+
     shop_items = fort.getShopData()
     request_body = {"batch": []}
 
     for item in shop_items:
-        message_details = {}
-        # if item.attachment_id:
-        #     if item.item_type == "emote":
-        #         message_details = {
-        #             "attachment": {
-        #                 "type": "template",
-        #                 "payload": {
-        #                     "template_type": "media",
-        #                     "elements": [
-        #                         {
-        #                             "media_type": "image",
-        #                             "attachment_id": item.attachment_id,
-        #                             "buttons": [
-        #                                 {
-        #                                     "type": "web_url",
-        #                                     "url": fort.construct_fortnite_youtube_search_url(item),
-        #                                     "title": "See Emote on YouTube",
-        #                                 }
-        #                             ]
-        #                         }
-        #                     ]
-        #                 }
-        #             }    
-        #         }
-        # else:
+        
         message_details = {
             "attachment":{
                 "type":"image", 
@@ -160,8 +161,11 @@ def getItemShop(sender_psid):
         }
 
         request_body["batch"].append(json_obj)
-        
-    requests.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + os.getenv("page_token"), json=request_body)
+    
+    response = requests.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + os.getenv("page_token"), json=request_body)
+    
+    post_quick_replies_menu(sender_psid)
+    post_toggle_sender_action(sender_psid, False)
         
 def get_shop_emotes(sender_psid):
     shop_items = fort.getShopEmotes()
@@ -301,16 +305,17 @@ def post_quick_replies_stat_menu(sender_psid):
                 {
                     "content_type":"text",
                     "title":"Duo",
-                    "payload":QuickReplies.DUO.value,
+                    "payload":QuickReplies.DUO.value
                 },
-                                    {
+                {
                     "content_type":"text",
                     "title":"Squad",
-                    "payload":QuickReplies.SQUAD.value,
-                },
+                    "payload":QuickReplies.SQUAD.value
+                }
             ]
         }
     }
+    print("BODY: ", request_body)
     requests.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + os.getenv("page_token"), json=request_body)
 
 def post_text_message(sender_psid, message):
